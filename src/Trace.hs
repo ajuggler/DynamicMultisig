@@ -7,23 +7,22 @@
 module Trace where
 
 import Control.Monad          (void)
---import           Control.Monad.Freer.Extras as Extras       --added
 import Data.Default           (Default (..))
 import qualified Data.Map                   as Map
-import           Ledger       (POSIXTime (..), PaymentPubKeyHash) --added
+import           Ledger       (POSIXTime (..), PaymentPubKeyHash)
 import           Ledger.Value
 import           Ledger.Ada                 as Ada
---        import           Ledger.TimeSlot
+--import           Ledger.TimeSlot
 import           Plutus.Trace.Emulator      as Emulator
 import Data.Text              (Text)
 import Plutus.Contract        hiding (waitNSlots)
-import           PlutusTx.Prelude                             --added
-import           Prelude                    (IO) --(String, IO, Show (..)) --added
+import           PlutusTx.Prelude
+import           Prelude                    (IO)
 import Wallet.Emulator.Wallet
---import qualified Plutus.V2.Ledger.Api as V2LA
+
 
 import Params
---             import Validators
+--import Validators
 import Setup
 import Registrar
 import Treasury
@@ -104,7 +103,7 @@ trace1 = do
   hS2 <- activateContractWallet wS2 endpoints
 --  hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initialization with three registered signatories and payment proposal
+  -- | Initialization with three registered signatories and payment proposal
   -- activated.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
@@ -120,7 +119,7 @@ trace1 = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Sign payment (completes 2 out of 3)
+  -- | Sign payment (completes 2 out of 3)
   callEndpoint @"signPay" hS2 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -140,7 +139,7 @@ trace1' = do
   hS2 <- activateContractWallet wS2 endpoints
 --  hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initialization with three signatories registered, payment proposal active,
+  -- | Initialization with three signatories registered, payment proposal active,
   -- no one has signed payment.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
@@ -156,7 +155,7 @@ trace1' = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Signs payment (first of 2 out of 3)
+  -- | Signs payment (first of 2 out of 3)
   callEndpoint @"signPay" hS1 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -164,7 +163,7 @@ trace1' = do
 
   void $ Emulator.waitNSlots 5
 
-  -- Signs payment (second of 2 out of 3) but it's too late
+  -- | Signs payment (second of 2 out of 3) but it's too late
   callEndpoint @"signPay" hS2 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -185,7 +184,7 @@ trace1'' = do
   hS2 <- activateContractWallet wS2 endpoints
 --  hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initializes with 3 signatories registered, payment proposal active.
+  -- | Initializes with 3 signatories registered, payment proposal active.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
     , ipTreAC       = assetClassTreasury
@@ -200,7 +199,7 @@ trace1'' = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Signs payment (first of 2 out of 3)
+  -- | Signs payment (first of 2 out of 3)
   callEndpoint @"signPay" hS1 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -208,7 +207,7 @@ trace1'' = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Same signatory tries to sign again
+  -- | Same signatory tries to sign again
   callEndpoint @"signPay" hS1 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -216,7 +215,7 @@ trace1'' = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Another signatory signs payment (second of 2 out of 3)
+  -- | Another signatory signs payment (second of 2 out of 3)
   callEndpoint @"signPay" hS2 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -235,7 +234,7 @@ trace2 = do
 --  hS2 <- activateContractWallet wS2 endpoints
 --  hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initializes with one signatory registered, treasury on stand-by.
+  -- | Initializes with one signatory registered, treasury on stand-by.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
     , ipTreAC       = assetClassTreasury
@@ -250,7 +249,7 @@ trace2 = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Signatory opens a payment proposal, triggering payment (only one vote needed)
+  -- | Signatory opens a payment proposal, triggering payment (only one vote needed)
   callEndpoint @"proposePay" hS1 $ ProposePayParams
     { pppRegAC = assetClassRegistrar
     , pppTreAC = assetClassTreasury
@@ -273,7 +272,7 @@ trace2' = do
   hS2 <- activateContractWallet wS2 endpoints
 --  hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initializes with two signatories registered, treasury on stand-by.
+  -- | Initializes with two signatories registered, treasury on stand-by.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
     , ipTreAC       = assetClassTreasury
@@ -288,7 +287,7 @@ trace2' = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Signatory opens payment proposal
+  -- | Signatory opens payment proposal
   callEndpoint @"proposePay" hS1 $ ProposePayParams
     { pppRegAC     = assetClassRegistrar
     , pppTreAC     = assetClassTreasury
@@ -299,7 +298,7 @@ trace2' = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Signatory tries to open a second payment proposal (should fail)
+  -- | Signatory tries to open a second payment proposal (should fail)
   callEndpoint @"proposePay" hS2 $ ProposePayParams
     { pppRegAC = assetClassRegistrar
     , pppTreAC = assetClassTreasury
@@ -322,7 +321,7 @@ trace2'' = do
 --  hS2 <- activateContractWallet wS2 endpoints
 --  hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initializes with two signatories registered, treasury on stand-by.
+  -- | Initializes with two signatories registered, treasury on stand-by.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
     , ipTreAC       = assetClassTreasury
@@ -337,7 +336,7 @@ trace2'' = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Signatory opens payment proposal
+  -- | Signatory opens payment proposal
   callEndpoint @"proposePay" hS1 $ ProposePayParams
     { pppRegAC     = assetClassRegistrar
     , pppTreAC     = assetClassTreasury
@@ -348,7 +347,7 @@ trace2'' = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Same signatory tries to "double-vote" (should fail)
+  -- | Same signatory tries to "double-vote" (should fail)
   callEndpoint @"signPay" hS1 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -368,7 +367,7 @@ trace2''' = do
   hS2 <- activateContractWallet wS2 endpoints
   hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initializes with 3 signatories registered, treasury on stand-by.
+  -- | Initializes with 3 signatories registered, treasury on stand-by.
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
     , ipTreAC       = assetClassTreasury
@@ -383,7 +382,7 @@ trace2''' = do
  
   void $ Emulator.waitNSlots 1
 
-  -- Signatory opens a payment proposal
+  -- | Signatory opens a payment proposal
   callEndpoint @"proposePay" hS1 $ ProposePayParams
     { pppRegAC = assetClassRegistrar
     , pppTreAC = assetClassTreasury
@@ -394,7 +393,7 @@ trace2''' = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Another signatory signs payment (not yet enough votes)
+  -- | Another signatory signs payment (not yet enough votes)
   callEndpoint @"signPay" hS2 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -402,7 +401,7 @@ trace2''' = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Yet another signatory signs payment, resulting in enough votes
+  -- | Yet another signatory signs payment, resulting in enough votes
   callEndpoint @"signPay" hS3 $ SignPayParams
     { sppRegAC = assetClassRegistrar
     , sppTreAC = assetClassTreasury
@@ -425,7 +424,7 @@ trace3 = do
   hS2 <- activateContractWallet wS2 endpoints
   hS3 <- activateContractWallet wS3 endpoints
 
-  -- Initializes with one signatory registered (and treasury on stand-by).
+  -- | Initializes with one signatory registered (and treasury on stand-by).
   callEndpoint @"initializeScripts" hF $ InitializeParams
     { ipRegAC       = assetClassRegistrar
     , ipTreAC       = assetClassTreasury
@@ -440,13 +439,13 @@ trace3 = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Logs Registrar's state
+  -- | Logs Registrar's state
   callEndpoint @"reportRegState" hF $ ReportParams
     { rpRegAC = assetClassRegistrar }
 
   void $ Emulator.waitNSlots 1
 
-  -- Proposes adding a two new signatories, which is immediately accepted (only
+  -- | Proposes adding a two new signatories, which is immediately accepted (only
   -- one vote needed)
   callEndpoint @"proposeAddSig" hS1 $ PropAddSigParams
     { paspAddSignatories = [pkhS2, pkhS3]
@@ -456,13 +455,13 @@ trace3 = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Logs Registrar's state
+  -- | Logs Registrar's state
   callEndpoint @"reportRegState" hF $ ReportParams
     { rpRegAC = assetClassRegistrar }
 
   void $ Emulator.waitNSlots 1
 
-  -- Proposes adding yet another signatory
+  -- | Proposes adding yet another signatory
   callEndpoint @"proposeAddSig" hS2 $ PropAddSigParams
     { paspAddSignatories = [pkhS4]
     , paspRegAC          = assetClassRegistrar
@@ -471,31 +470,31 @@ trace3 = do
 
   void $ Emulator.waitNSlots 1
 
-  -- Logs Registrar's state
+  -- | Logs Registrar's state
   callEndpoint @"reportRegState" hF $ ReportParams
     { rpRegAC = assetClassRegistrar }
 
   void $ Emulator.waitNSlots 1
 
-  -- Votes in favor of add proposal (second of 3 out of 4)
+  -- | Votes in favor of add proposal (second of 3 out of 4)
   callEndpoint @"approveAddSig" hS3 $ ApproveAddParams
     { aapRegAC = assetClassRegistrar }
 
   void $ Emulator.waitNSlots 1
 
-  -- Logs Registrar's state
+  -- | Logs Registrar's state
   callEndpoint @"reportRegState" hF $ ReportParams
     { rpRegAC = assetClassRegistrar }
 
   void $ Emulator.waitNSlots 1
 
-  -- Votes in favor of add proposal (third of 3 out of 4)
+  -- | Votes in favor of add proposal (third of 3 out of 4)
   callEndpoint @"approveAddSig" hS1 $ ApproveAddParams
     { aapRegAC = assetClassRegistrar }
 
   void $ Emulator.waitNSlots 1
 
-  -- Logs final Registrar's state
+  -- | Logs final Registrar's state
   callEndpoint @"reportRegState" hF $ ReportParams
     { rpRegAC = assetClassRegistrar }
 
