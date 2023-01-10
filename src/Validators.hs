@@ -37,8 +37,6 @@ data SigRegRedeemer = ProposeAdd [L.PaymentPubKeyHash] | ProposeRemove [L.Paymen
 
 PlutusTx.unstableMakeIsData ''SigRegRedeemer
 
--- PlutusTx.unstableMakeIsData ''ProposePayment
-
 data PayRedeemer = ProposePay { ppAmount :: Integer, ppRecipient :: L.PaymentPubKeyHash , ppDeadline :: POSIXTime} | SignPay
 
 PlutusTx.unstableMakeIsData ''PayRedeemer
