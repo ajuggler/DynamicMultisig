@@ -46,7 +46,7 @@ endpoints = awaitPromise (initializeScripts' `select` proposeAddSig' `select` ap
 -- TEST --
 
 test :: IO ()
-test = runEmulatorTraceIO' def emCfg trace3
+test = runEmulatorTraceIO' def emCfg trace3  -- change this line to run other traces
 
 -- Traces defined below: trace1, trace1', trace1'', trace2, trace2', trace2'', trace2''', trace3
 
