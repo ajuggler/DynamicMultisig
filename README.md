@@ -9,7 +9,9 @@ This project implements a Treasury whose authorized signatories can be changed d
 
 -   *Date (first version)*:  January 2023
 
--   *Plutus version:*  v1.0.0
+-   *Plutus aps revision:*  v1.0.0
+
+-   *Plutus version:*  V2
 
 
 ## Description
